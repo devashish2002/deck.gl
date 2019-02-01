@@ -3,7 +3,7 @@
   <img src="https://img.shields.io/badge/extruded-yes-blue.svg?style=flat-square" alt="extruded" />
 </p>
 
-# S2Layer
+# S2Layer (Experimental)
 
 The S2Layer renders filled and/or stroked polygons, with geometry automatically calculated based on an S2 token (geospatial index).
 
@@ -70,6 +70,10 @@ const App = ({data, viewport}) => {
 Inherits from all [Base Layer](/docs/api-reference/layer.md) properties.
 
 Accepts all properties from `PolygonLayer`, except `getPolygon` has been replaced with `getToken`:
+
+### Render Options
+
+Accepts all render options from `PolygonLayer`.
 
 ### Data Accessors
 

@@ -23,40 +23,19 @@ import {PolygonLayer} from '@deck.gl/layers';
 
 import {getS2Polygon} from './s2-utils';
 
-const defaultLineColor = [51, 51, 51, 255];
-const defaultFillColor = [189, 226, 122, 255];
+function getDefaultProps() {
+  const defaultProps = {};
+  for (const prop in PolygonLayer.defaultProps) {
+    if (prop !== 'getPolygon') {
+      defaultProps[prop] = PolygonLayer.defaultProps[prop];
+    }
+  }
 
-const defaultProps = {
-  stroked: false,
-  filled: true,
-  extruded: false,
-  elevationScale: 1,
-  wireframe: false,
+  defaultProps.getS2Token = {type: 'accessor', value: f => f.token};
+  return defaultProps;
+}
 
-  lineWidthScale: 1,
-  lineWidthMinPixels: 0,
-  lineWidthMaxPixels: Number.MAX_SAFE_INTEGER,
-  lineJointRounded: false,
-  lineMiterLimit: 4,
-  lineDashJustified: false,
-  fp64: false,
-
-  // Cell geometry
-  getS2Token: {type: 'accessor', value: f => f.token},
-  // Cell Polygon fill color
-  getFillColor: {type: 'accessor', value: defaultFillColor},
-  // Cell polygon outline color
-  getLineColor: {type: 'accessor', value: defaultLineColor},
-  // Cell polygon outline accessors
-  getLineWidth: {type: 'accessor', value: 1},
-  // Cell polygon Line dash array accessor
-  getLineDashArray: {type: 'accessor', value: [0, 0]},
-  // Cell polygon extrusion accessor
-  getElevation: {type: 'accessor', value: 1000},
-
-  // Optional settings for 'lighting' shader module
-  lightSettings: {}
-};
+const defaultProps = getDefaultProps();
 
 export default class S2Layer extends CompositeLayer {
   renderLayers() {
@@ -91,8 +70,6 @@ export default class S2Layer extends CompositeLayer {
     const CellLayer = this.getSubLayerClass('cell', PolygonLayer);
     return new CellLayer(
       {
-        id: 'cell',
-
         fp64,
         filled,
         wireframe,
@@ -117,8 +94,8 @@ export default class S2Layer extends CompositeLayer {
         getLineDashArray
       },
       this.getSubLayerProps({
+        id: 'cell',
         updateTriggers: {
-          getS2Token: updateTriggers.getS2Token,
           getElevation: updateTriggers.getElevation,
           getFillColor: updateTriggers.getFillColor,
           getLineColor: updateTriggers.getLineColor,
